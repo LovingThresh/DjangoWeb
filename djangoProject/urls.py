@@ -15,8 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+from django.shortcuts import render
+
+
+def home_view(request):
+    var = {'hello': 'Liuye'}
+    return render(request, 'runoob.html', context=var)
+
+
+def simple_view(request):
+    return render(request, 'result.html')
+
 
 urlpatterns = [
+    path("", home_view, name='home'),
+    path("result/", simple_view, name='result'),
     path("admin/", admin.site.urls),
-    # path('polls/', include('polls.urls')),
+    path('polls/', include('polls.urls')),
 ]
