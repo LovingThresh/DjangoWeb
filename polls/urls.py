@@ -4,7 +4,9 @@
 # @Email   : csu1704liuye@163.com | sy2113205@buaa.edu.cn
 # @File    : urls.py
 # @Software: PyCharm
-from django.urls import path
+from django.urls import path, re_path
+from django.conf.urls.static import static
+from django.conf import settings
 
 from . import views
 
@@ -15,7 +17,10 @@ app_name = 'polls'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('uploading', views.uploadImg, name='upload'),
+    path('showing', views.showImg, name='show'),
     path('<int:question_id>/', views.detail, name='detail'),
     path('<int:question_id>/results/', views.results, name='results'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
-]
+    re_path(r'^test/$', views.showImg, name='test')
+] + static('/test/', document_root=settings.MEDIA_ROOT)

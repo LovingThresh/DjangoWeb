@@ -22,3 +22,7 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+class UploadIMG(models.Model):
+    img = models.ImageField(upload_to='polls/static/polls')

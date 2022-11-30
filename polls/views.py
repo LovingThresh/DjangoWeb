@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import UploadIMG
 
 
 # Create your views here.
@@ -18,3 +19,21 @@ def results(request, question_id):
 
 def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
+
+
+# Create your views here.
+def uploadImg(request):
+    if request.method == 'POST':
+        new_img = UploadIMG(
+            img=request.FILES.get('img')
+        )
+        new_img.save()
+    return render(request, 'uploading.html')
+
+
+def showImg(request):
+    imgs = UploadIMG.objects.all()
+    content = {
+        'imgs': imgs.first().img.url,
+    }
+    return render(request, 'showing.html', content)
