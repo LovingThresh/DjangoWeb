@@ -19,8 +19,14 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('uploading', views.uploadImg, name='upload'),
     path('showing', views.showImg, name='show'),
+
+    path('index_view', views.showIndex, name='index_view'),
+    path('example', views.showExample, name='example'),
+
+
+    path('SuperResolution', views.SuperResolution, name='SuperResolution'),
+
     path('<int:question_id>/', views.detail, name='detail'),
     path('<int:question_id>/results/', views.results, name='results'),
-    path('<int:question_id>/vote/', views.vote, name='vote'),
-    re_path(r'^test/$', views.showImg, name='test')
-] + static('/test/', document_root=settings.MEDIA_ROOT)
+    path('<int:question_id>/vote/', views.vote, name='vote')
+]

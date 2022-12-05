@@ -1,14 +1,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define('simple-hotkeys', ["jquery","simple-module"], function ($, SimpleModule) {
+    define('simple-hotkeys', ["static/js/jquery","simple-module"], function ($, SimpleModule) {
       return (root['hotkeys'] = factory($, SimpleModule));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(require("jquery"),require("simple-module"));
+    module.exports = factory(require("static/js/jquery"),require("simple-module"));
   } else {
     root.simple = root.simple || {};
     root.simple['hotkeys'] = factory(jQuery,SimpleModule);

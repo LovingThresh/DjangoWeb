@@ -37,3 +37,15 @@ def showImg(request):
         'imgs': imgs.first().img.url,
     }
     return render(request, 'showing.html', content)
+
+
+def showIndex(request):
+    return render(request, 'index.html')
+
+
+def showExample(request):
+    return render(request, 'example.html')
+
+
+def SuperResolution(request):
+    return render(request, 'SuperResolution.html')
