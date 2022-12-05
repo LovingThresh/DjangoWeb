@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>Demo</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="public/css/codemirror.css">
+        <link rel="stylesheet" href="public/css/highlight.css">
+        <link rel="stylesheet" href="public/css/katex.css">
+        <link rel="stylesheet" href="public/css/main.css">
+        <link rel="stylesheet" href="public/css/simditor.css">
+        <script src="public/js/jquery.js"></script>
+        <script src="public/js/underscore.js"></script>
+        <script src="public/js/moment-with-locales.min.js"></script>
+        <script src="public/js/marked.js"></script>
+        <script src="public/js/codemirror.js"></script>
+        <script src="public/js/highlight.js"></script>
+        <script src="public/js/katex.js"></script>
+        <script src="public/js/module.js"></script>
+        <script src="public/js/hotkeys.js"></script>
+        <script src="public/js/uploader.js"></script>
+        <script src="public/js/simditor.js"></script>
+        <script src="public/js/turndown.js"></script>
+    </head>
+
+    <body>
+        <div id="header" class="uk-navbar uk-navbar-attached">
+            <div class="uk-container x-container">
+                <div id="navbar" class="uk-navbar uk-navbar-attached">
+                    <a id="brand" href="/" class="uk-navbar-brand uk-visible-large">
+                    智能监测系统
+                    </a>
+                    <ul id="ul-navbar" class="uk-navbar-nav uk-hidden-small">
+                        <li class="x-nav">
+                            <a href="./upload2.html">
+                                <span class="x-icon" data-id="1279465533472802">
+                                    <svg width="14px" height="14px" viewBox="0 0 50 50">
+                                        <path d="M 2.84375 3 C 1.285156 3 0 4.285156 0 5.84375 L 0 10.8125 C -0.00390625 10.855469 -0.00390625 10.894531 0 10.9375 L 0 46 C 0 46.550781 0.449219 47 1 47 L 49 47 C 49.550781 47 50 46.550781 50 46 L 50 11 C 50 10.96875 50 10.9375 50 10.90625 L 50 5.84375 C 50 4.285156 48.714844 3 47.15625 3 Z M 2.84375 5 L 47.15625 5 C 47.636719 5 48 5.363281 48 5.84375 L 48 10 L 2 10 L 2 5.84375 C 2 5.363281 2.363281 5 2.84375 5 Z M 2 12 L 48 12 L 48 45 L 2 45 Z M 14.90625 19.9375 C 14.527344 19.996094 14.214844 20.265625 14.101563 20.628906 C 13.988281 20.996094 14.09375 21.394531 14.375 21.65625 L 19.59375 27.03125 L 14.21875 32.25 C 13.820313 32.636719 13.816406 33.273438 14.203125 33.671875 C 14.589844 34.070313 15.226563 34.074219 15.625 33.6875 L 21.6875 27.75 L 22.40625 27.0625 L 21.71875 26.34375 L 15.78125 20.25 C 15.601563 20.058594 15.355469 19.949219 15.09375 19.9375 C 15.03125 19.929688 14.96875 19.929688 14.90625 19.9375 Z M 22.8125 32 C 22.261719 32.050781 21.855469 32.542969 21.90625 33.09375 C 21.957031 33.644531 22.449219 34.050781 23 34 L 36 34 C 36.359375 34.003906 36.695313 33.816406 36.878906 33.503906 C 37.058594 33.191406 37.058594 32.808594 36.878906 32.496094 C 36.695313 32.183594 36.359375 31.996094 36 32 L 23 32 C 22.96875 32 22.9375 32 22.90625 32 C 22.875 32 22.84375 32 22.8125 32 Z "></path>
+                                    </svg>
+                                </span>
+                                数据上传
+                            </a>
+                        </li>
+                        <li class="x-nav">
+                            <a href="./img.php">
+                                <span class="x-icon" data-id="1279465562832930">
+                                    <svg width="14px" height="14px" viewBox="0 0 50 50">
+                                        <path d="M 12 2 C 8.6983746 2 6 4.6983746 6 8 L 6 42.417969 C 6 45.591903 8.832306 48 12 48 L 44 48 L 44 46 L 12 46 C 9.841694 46 8 44.378035 8 42.417969 C 8 40.457903 9.8001368 39 12 39 L 44 39 L 44 2 L 12 2 z M 12 4 L 42 4 L 42 37 L 12 37 C 10.506931 37 9.0923623 37.537598 8 38.417969 L 8 8 C 8 5.7796254 9.7796254 4 12 4 z M 15 9 C 13.906937 9 13 9.9069372 13 11 L 13 15 C 13 16.093063 13.906937 17 15 17 L 36 17 C 37.093063 17 38 16.093063 38 15 L 38 11 C 38 9.9069372 37.093063 9 36 9 L 15 9 z M 15 11 L 36 11 L 36 15 L 15 15 L 15 11 z"></path>
+                                    </svg>
+                                </span>
+                                检测结果
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="navbar-user-info" class="uk-navbar-flip">
+                        <ul class="uk-navbar-nav">
+                            <li class="x-display-if-not-signin uk-hidden-small">
+                                <a href="/login.html">
+                                    <i></i>
+                                    注销
+                                </a>
+                            </li>
+                            <li class="x-display-if-not-signin uk-visible-small">
+                                <a href="#">
+                                    <i class="uk-icon-sign-in"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
