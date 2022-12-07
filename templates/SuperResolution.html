@@ -1,12 +1,20 @@
 
 {% extends 'index.html' %}
+{% load static %}
 
 {% block content %}
 
-    <h1> This is SuperResolution Block.</h1>
+    <br><br>
+    <div class="container">
+    <h1> 图像超分辨率模块</h1>
     <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
     <input type="file" name="img">
     <button type="submit">submit</button>
     </form>
+
+        <a href={% url "polls:result" %}><button class="uk-width-large-4-10 btn btn-lg  btn-primary" type="button">查看测试结果</button></a>
+    </div>
+
 
 {% endblock %}

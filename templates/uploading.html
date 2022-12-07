@@ -1,17 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>UploadingIMG</title>
-</head>
-<body>
+{% extends 'index.html' %}
+{% load static %}
 
-<form method="POST" enctype="multipart/form-data">
-<input type="file" name="img">
-<button type="submit">submit</button>
-</form>
+{% block content %}
+<main>
 
-</body>
-</html>
+    <br><br>
 
+
+    <div class="album py-5 bg-light">
+    <div class="container">
+
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-2" >
+        <div class="col">
+          <div class="card shadow-sm">
+              <h4>输入图像</h4>
+              <img src=" {% static 'polls/Grab.jpg' %} " alt="No Source"  width="100%" height="512">
+
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+              <h4>增强结果</h4>
+              <img src=" {% static 'polls/Grab.jpg' %} " alt="No Source"  width="100%" height="512">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
 

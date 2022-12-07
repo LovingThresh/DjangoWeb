@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>This is the result !</h1>
-</body>
-</html>
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-2" >
+        <div class="col" style="padding-right: 15px; padding-left: 15px">
+          <div class="card shadow-sm">
+              <h4 style="padding-top: 4px">输入图像</h4>
+              <img src=" {% static 'polls/low_resolution.jpg' %} " alt="No Source"  width="100%" height="512">
+
+          </div>
+
+        </div>
+        <div class="col" style="padding-right: 15px; padding-left: 15px">
+          <div class="card shadow-sm">
+              <h4 style="padding-top: 4px">增强结果</h4>
+              <img src=" {% static 'polls/high_resolution.jpg' %} " alt="No Source"  width="100%" height="512">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
