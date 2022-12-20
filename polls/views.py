@@ -1,9 +1,10 @@
 import os
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from .models import UploadIMG
-
+from .form import ReviewForm
 import cv2
 
 
@@ -68,6 +69,22 @@ def SuperResolution(request):
 
     return render(request, 'SuperResolution.html')
 
+
+def form(request):
+
+    # POST  REQUEST --> FORM CONTENT
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            return redirect(reverse('polls:thank_you'))
+    else:
+        form = ReviewForm()
+    return render(request, 'form.html', context={'form': form})
+
+
+def thank_you(request):
+    return render(request, 'thank_you.html')
 # def Show_SuperResolution(request):
 #     last_image_path = UploadIMG.objects.last().img.url
 #     processed_img = img_process()

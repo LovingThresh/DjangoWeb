@@ -23,5 +23,8 @@ urlpatterns = [
     path('example', views.showExample, name='example'),
     path('SuperResolution', views.SuperResolution, name='SuperResolution'),
 
-    path('result', views.showResult, name='result')
+    path('result', views.showResult, name='result'),
+
+    path('form', views.form, name='form'),
+    path('thank_you', views.thank_you, name='thank_you')
 ]
