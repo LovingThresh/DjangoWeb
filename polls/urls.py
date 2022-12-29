@@ -17,11 +17,13 @@ app_name = 'polls'
 
 urlpatterns = [
     path('', views.showIndex, name='index'),
-
+    path('logining', views.show_logining),
     path('uploading', views.uploadImg, name='upload'),
     path('showing', views.showImg, name='show'),
     path('example', views.showExample, name='example'),
+
     path('SuperResolution', views.SuperResolution, name='SuperResolution'),
+    path('Decloud', views.DeCloud, name='Decloud'),
 
     path('result', views.showResult, name='result'),
 

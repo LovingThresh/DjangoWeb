@@ -7,7 +7,3 @@
 
 import cv2
 
-
-def img_process(img_url):
-    img = cv2.imread(img_url)
-    img = cv2.resize(img, (img.size))
