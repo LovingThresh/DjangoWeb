@@ -20,6 +20,13 @@ from django.shortcuts import render
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework import routers
+from polls import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+
 
 def home_view(request):
     var = {'hello': 'Liuye'}
@@ -40,4 +47,8 @@ urlpatterns = [
                   path("result/", simple_view, name='result'),
                   path("admin/", admin.site.urls),
                   path('polls/', include('polls.urls')),
+
+                  path('', include(router.urls)),
+                  path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
