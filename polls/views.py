@@ -37,6 +37,20 @@ de_cloud_model = onnxruntime.InferenceSession('./polls/MSBDN_RDFF_sim.onnx',
 super_solution_model = onnxruntime.InferenceSession('./polls/ECBSR_x2_m16c64_prelu_rep.onnx',
                                                     providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
 
+super_solution_model_EDSR = onnxruntime.InferenceSession('./polls/EDSR_sim.onnx',
+                                                         providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
+
+super_solution_model_SwinIR = onnxruntime.InferenceSession('./polls/SwinIR_sim.onnx',
+                                                           providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
+
+Thin_Cloud_Classification_ConvNext = onnxruntime.InferenceSession('./polls/ConvNext_sim.onnx',
+                                                                  providers=['CUDAExecutionProvider',
+                                                                             'CPUExecutionProvider'])
+
+Cloud_Segmentation_Unet = onnxruntime.InferenceSession('./polls/Segmentation_UNet_sim.onnx',
+                                                       providers=['CUDAExecutionProvider',
+                                                                  'CPUExecutionProvider'])
+
 
 # Create your views here.
 
@@ -76,8 +90,15 @@ def showResult(request):
     return render(request, 'result.html')
 
 
+# def timm_data_tranforme():
+# def ThinCloudClassification(request):
+
+
 def SuperResolution(request):
     if request.method == 'POST':
+        model_name = request.POST['model']
+        assert model_name in ['ECBSR', 'EDSR', 'SwinIR']
+
         new_img = UploadIMG(
             img=request.FILES.get('img')
         )
