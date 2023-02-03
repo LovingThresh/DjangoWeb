@@ -2,11 +2,9 @@ import cv2
 import time
 import numpy as np
 import onnxruntime
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.shortcuts import render
 from django.http import HttpResponse
 from .models import UploadIMG
-from .form import ReviewForm
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
@@ -34,7 +32,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-running_time, model_name = 0, None
+task_name, running_time, model_name = None, 0, None
 cloud_classification, cloud_segmentation_rate = None, None
 de_cloud_model = onnxruntime.InferenceSession('./polls/MSBDN_RDFF_sim.onnx',
                                               providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
@@ -94,9 +92,10 @@ def showExample(request):
 
 
 def SuperResolution(request):
-    global running_time, model_name
+    global task_name, running_time, model_name
     if request.method == 'POST':
 
+        task_name = '超分辨率重建'
         model_name = request.POST['model']
 
         assert model_name in ['ECBSR', 'EDSR', 'SwinIR']
@@ -114,7 +113,7 @@ def SuperResolution(request):
         )
         new_img.save()
         img_path = UploadIMG.objects.last().img.url
-        img_path = r'O:/djangoProject' + img_path
+        img_path = './' + img_path
 
         # 图像超分
         low_resolution_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
@@ -133,22 +132,25 @@ def SuperResolution(request):
         show_high_resolution_img = cv2.resize(high_resolution_img, (512, 512))
 
         # 修改名称
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/raw_result.jpg', show_low_resolution_img)
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/generated_result.jpg', show_high_resolution_img)
+        cv2.imwrite('./' + 'polls/static/polls/raw_result.jpg', show_low_resolution_img)
+        cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_high_resolution_img)
 
     return render(request, 'SuperResolution.html')
 
 
 def DeCloud(request):
+    global task_name, model_name, running_time
     if request.method == 'POST':
         new_img = UploadIMG(
             img=request.FILES.get('img')
         )
         new_img.save()
         img_path = UploadIMG.objects.last().img.url
-        img_path = r'O:/djangoProject' + img_path
+        img_path = './' + img_path
 
-        # 图像超分
+        model_name = 'MSBDN_RDFF'
+        task_name = '去云'
+        # 图像去云
         cloud_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
         cloud_img = cv2.resize(cloud_img, (256, 256))
         show_cloud_img = cv2.resize(cloud_img, (512, 512))
@@ -157,14 +159,17 @@ def DeCloud(request):
         cloud_img = np.expand_dims(((cloud_img - 127.5) / 127.5).transpose(2, 0, 1), 0).astype(np.float32)
 
         onnx_input = {de_cloud_model.get_inputs()[0].name: cloud_img}
+        record_time_begin = time.time()
         de_cloud_img = de_cloud_model.run(None, onnx_input)
+        record_time_end = time.time()
+        running_time = record_time_end - record_time_begin
         de_cloud_img = np.uint8(np.clip(de_cloud_img[0].squeeze(0).transpose(1, 2, 0), -1, 1) * 127.5 + 127.5)
         de_cloud_img = cv2.cvtColor(de_cloud_img, cv2.COLOR_RGB2BGR)
         show_de_cloud_img = cv2.resize(de_cloud_img, (512, 512))
 
         # 修改名称
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/raw_result.jpg', show_cloud_img)
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
+        cv2.imwrite('./' + 'polls/static/polls/raw_result.jpg', show_cloud_img)
+        cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
 
     return render(request, 'Decloud.html')
 
@@ -178,7 +183,7 @@ def Cloud_Identification(request):
         )
         new_img.save()
         img_path = UploadIMG.objects.last().img.url
-        img_path = r'O:/djangoProject' + img_path
+        img_path = './' + img_path
 
         # 图像薄云判别
         img_timm_numpy, img_segmentation_numpy = data_preprocess_for_timm(img_path=img_path)
@@ -201,8 +206,8 @@ def Cloud_Identification(request):
 
         # 修改名称
 
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/raw_input.jpg', cv2.resize(cv2.imread(img_path), (512, 512)))
-        cv2.imwrite(r'O:/djangoProject/' + 'polls/static/polls/segmentation_output.jpg',
+        cv2.imwrite('./' + 'polls/static/polls/raw_input.jpg', cv2.resize(cv2.imread(img_path), (512, 512)))
+        cv2.imwrite('./' + 'polls/static/polls/segmentation_output.jpg',
                     cv2.resize(cloud_segmentation * 255, (512, 512)))
 
     return render(request, 'Cloud_Identification.html')
@@ -219,19 +224,8 @@ def showResult(request):
     # 从数据的路径中载入低分图像
 
     return render(request, 'result.html', context={'running_model': model_name,
+                                                   'running_task': task_name,
                                                    'running_time': format(running_time, '.4f')})
-
-
-def form(request):
-    # POST  REQUEST --> FORM CONTENT
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            return redirect(reverse('polls:thank_you'))
-    else:
-        form = ReviewForm()
-    return render(request, 'form.html', context={'form': form})
 
 
 def thank_you(request):

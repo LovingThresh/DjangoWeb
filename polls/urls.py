@@ -4,9 +4,7 @@
 # @Email   : csu1704liuye@163.com | sy2113205@buaa.edu.cn
 # @File    : urls.py
 # @Software: PyCharm
-from django.urls import path, re_path
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import path
 
 from . import views
 
@@ -29,6 +27,5 @@ urlpatterns = [
     path('result', views.showResult, name='result'),
     path('identification_result', views.showIdentificationResult, name='identification_result'),
 
-    path('form', views.form, name='form'),
     path('thank_you', views.thank_you, name='thank_you')
 ]
