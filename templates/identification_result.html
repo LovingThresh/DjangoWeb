@@ -10,21 +10,22 @@
         <div class="col" style="padding-right: 15px; padding-left: 15px">
           <div class="card shadow-sm">
               <h4 style="padding-top: 4px">输入图像</h4>
-              <img src=" {% static 'polls/raw_result.jpg' %} " alt="No Source"  width="100%" height="512">
+              <img src=" {% static 'polls/raw_input.jpg' %} " alt="No Source"  width="100%" height="512">
 
           </div>
 
         </div>
         <div class="col" style="padding-right: 15px; padding-left: 15px">
           <div class="card shadow-sm">
-              <h4 style="padding-top: 4px">增强结果</h4>
-              <img src=" {% static 'polls/generated_result.jpg' %} " alt="No Source"  width="100%" height="512">
+              <h4 style="padding-top: 4px">分割结果</h4>
+              <img src=" {% static 'polls/segmentation_output.jpg' %} " alt="No Source"  width="100%" height="512">
 
           </div>
         </div>
       </div><p></p>
         <div class="row">
-            <h4 style="padding-top: 4px">该超分辨率模型{{ running_model }}所花费的运行时间是: {{ running_time }} s</h4>
+            <h4 style="padding-top: 4px">该图像是否存在云层遮挡： {{ cloud_classification_result }} </h4>
+            <h4 style="padding-top: 4px">该图像的云层遮挡率： {{ cloud_segmentation_result }} % </h4>
          </div>
     </div>
   </div>

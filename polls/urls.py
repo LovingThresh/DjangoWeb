@@ -24,8 +24,10 @@ urlpatterns = [
 
     path('SuperResolution', views.SuperResolution, name='SuperResolution'),
     path('Decloud', views.DeCloud, name='Decloud'),
+    path('Cloud_Identification', views.Cloud_Identification, name='Cloud_Identification'),
 
     path('result', views.showResult, name='result'),
+    path('identification_result', views.showIdentificationResult, name='identification_result'),
 
     path('form', views.form, name='form'),
     path('thank_you', views.thank_you, name='thank_you')
