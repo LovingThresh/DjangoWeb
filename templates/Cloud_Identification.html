@@ -5,15 +5,17 @@
 
     <br><br>
     <div class="container">
-    <h1> 图像评估模块</h1>
+    <h1> 图像评估模块</h1><p></p>
     <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="img">
     <button type="submit">submit</button>
     </form>
         <a href={% url "polls:identification_result" %}>
-            <button class="uk-width-large-4-10 btn btn-lg  btn-primary" type="button">查看评估结果</button>
+
+            <button class="btn  btn-primary" type="button">查看评估结果</button>
         </a>
+    <p></p>
     </div>
 
 
