@@ -19,3 +19,10 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
+
+class ImageSerializer(serializers.Serializer):
+    # 定义一个图像字段
+    image = serializers.ImageField()
+
+    # 定义一个结果字段
+    result = serializers.CharField()

@@ -1,15 +1,15 @@
-import cv2
 import time
-import numpy as np
 import onnxruntime
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import UploadIMG
 
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.contrib.auth.models import User, Group
+from .serializers import UserSerializer, GroupSerializer, ImageSerializer
 
 from .data_preprocess import *
 
@@ -89,6 +89,36 @@ def showExample(request):
 # def timm_data_transform():
 
 # def ThinCloudClassification(request):
+
+@api_view(['POST'])  # 只允许POST方法
+def classify(request):
+    # 获取请求中的数据并进行反序列化
+    serializer = ImageSerializer(data=request.data)
+
+    # 判断数据是否有效
+    if serializer.is_valid():
+        # 获取反序列化后的数据
+        data = serializer.validated_data
+
+        # 获取图像文件
+        # image_file = data.get('image')
+
+        # 调用图像预处理函数
+        # image = preprocess(image_file)
+
+        # 调用图像推理函数
+        # label = infer(image)
+
+        # 调用图像后处理函数
+        # result = postprocess(label)
+
+        # 更新结果到数据中
+        # data['result'] = result
+
+        # 返回JSON格式的响应，并进行序列化
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
 
 
 def SuperResolution(request):
@@ -175,7 +205,6 @@ def DeCloud(request):
 
 
 def Cloud_Identification(request):
-
     global cloud_classification, cloud_segmentation_rate
     if request.method == 'POST':
         new_img = UploadIMG(
@@ -190,7 +219,7 @@ def Cloud_Identification(request):
 
         onnx_input = {thin_cloud_classification_ConvNext.get_inputs()[0].name: img_timm_numpy}
         cloud_classification = thin_cloud_classification_ConvNext.run(None, onnx_input)
-        cloud_classification = np.array(cloud_classification).reshape(2,)
+        cloud_classification = np.array(cloud_classification).reshape(2, )
         cloud_classification = np.exp(cloud_classification[0]) / np.exp(cloud_classification).sum()
         if cloud_classification >= 0.5:
             cloud_classification = '是'
@@ -217,7 +246,8 @@ def showIdentificationResult(request):
     # 从数据的路径中载入低分图像
 
     return render(request, 'identification_result.html', context={'cloud_classification_result': cloud_classification,
-                                                                  'cloud_segmentation_result': format(cloud_segmentation_rate, '.4f')})
+                                                                  'cloud_segmentation_result': format(
+                                                                      cloud_segmentation_rate, '.4f')})
 
 
 def showResult(request):
