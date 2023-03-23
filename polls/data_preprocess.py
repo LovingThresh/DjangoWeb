@@ -23,7 +23,7 @@ WSISEG_STATS = [0.3114, 0.3166, 0.3946], [0.2587, 0.2598, 0.2958]
 image_tfm = T.Compose(
     [T.ToTensor(),
      T.Normalize(mean=WSISEG_STATS[0], std=WSISEG_STATS[1]),
-     T.Resize((256, 256))
+     T.Resize((512, 512))
      ]
 )
 

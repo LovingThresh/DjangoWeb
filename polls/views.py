@@ -1,4 +1,6 @@
 import time
+
+import numpy as np
 import onnxruntime
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -34,22 +36,22 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 task_name, running_time, model_name = None, 0, None
 cloud_classification, cloud_segmentation_rate = None, None
-de_cloud_model = onnxruntime.InferenceSession('./polls/MSBDN_RDFF_sim.onnx',
+de_cloud_model = onnxruntime.InferenceSession('./polls/ONNX/MSBDN_RDFF_sim.onnx',
                                               providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
 
-super_solution_model_ECBSR = onnxruntime.InferenceSession('./polls/ECBSR_x2_m16c64_prelu_rep.onnx',
+super_solution_model_ECBSR = onnxruntime.InferenceSession('./polls/ONNX/ECBSR_x2_m16c64_prelu_rep.onnx',
                                                           providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
-super_solution_model_EDSR = onnxruntime.InferenceSession('./polls/EDSR_sim.onnx',
+super_solution_model_EDSR = onnxruntime.InferenceSession('./polls/ONNX/EDSR_sim.onnx',
                                                          providers=['CUDAExecutionProvider',
                                                                     'CPUExecutionProvider'])
-super_solution_model_SwinIR = onnxruntime.InferenceSession('./polls/SwinIR_sim.onnx',
+super_solution_model_SwinIR = onnxruntime.InferenceSession('./polls/ONNX/SwinIR_sim.onnx',
                                                            providers=['CUDAExecutionProvider',
                                                                       'CPUExecutionProvider'])
 
-thin_cloud_classification_ConvNext = onnxruntime.InferenceSession('./polls/ConvNext_sim.onnx',
+thin_cloud_classification_ConvNext = onnxruntime.InferenceSession('./polls/ONNX/ConvNext_sim.onnx',
                                                                   providers=['CUDAExecutionProvider',
                                                                              'CPUExecutionProvider'])
-cloud_segmentation_Unet = onnxruntime.InferenceSession('./polls/Segmentation_UNet_sim.onnx',
+cloud_segmentation_Unet = onnxruntime.InferenceSession('./polls/ONNX/CloudSeg_sim.onnx',
                                                        providers=['CUDAExecutionProvider',
                                                                   'CPUExecutionProvider'])
 
@@ -229,9 +231,9 @@ def Cloud_Identification(request):
         # 图像云层分割
         onnx_input = {cloud_segmentation_Unet.get_inputs()[0].name: img_segmentation_numpy}
         cloud_segmentation = cloud_segmentation_Unet.run(None, onnx_input)
-        cloud_segmentation = (np.argmax(cloud_segmentation[0][0], axis=0) > 1).astype(np.uint8)
+        cloud_segmentation = (cloud_segmentation[0][0][0]).astype(np.uint8)
 
-        cloud_segmentation_rate = cloud_segmentation.sum() / (256 ** 2) * 100
+        cloud_segmentation_rate = cloud_segmentation.sum() / cloud_segmentation.size * 100
 
         # 修改名称
 
