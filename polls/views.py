@@ -2,9 +2,11 @@ import time
 
 import numpy as np
 import onnxruntime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import UploadIMG
+import django.contrib.auth as auth
+from django.contrib.auth import login as auth_login
 
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -261,10 +263,26 @@ def showResult(request):
 
 
 def thank_you(request):
+    message = 'Hello'
+    print(message)
     return render(request, 'thank_you.html')
 
 
 def show_logining(request):
+    return render(request, 'logining.html')
+
+
+# 验证用户名与密码
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('name')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return render(request, 'index.html')
+        else:
+            return render(request, 'logining.html', {'error': '用户名或密码错误'})
     return render(request, 'logining.html')
 
 # def Show_SuperResolution(request):

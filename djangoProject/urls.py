@@ -36,13 +36,8 @@ def simple_view(request):
     return render(request, 'result.html')
 
 
-def login_view(request):
-    return render(request, 'logining.html')
-
-
 urlpatterns = [
                   path("", home_view, name='home'),
-                  path("login/", login_view, name='login'),
                   path("result/", simple_view, name='result'),
                   path("admin/", admin.site.urls),
                   path('polls/', include('polls.urls')),
