@@ -36,7 +36,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-task_name, running_time, model_name = None, 0, None
+task_name, running_time, model_name = '去云', 0.012, 'MSBDN_RDFF'
 cloud_classification, cloud_segmentation_rate = None, None
 de_cloud_model = onnxruntime.InferenceSession('./polls/ONNX/MSBDN_RDFF_sim.onnx',
                                               providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
@@ -166,7 +166,7 @@ def SuperResolution(request):
         show_high_resolution_img = cv2.resize(high_resolution_img, (512, 512))
 
         # 修改名称
-        cv2.imwrite('./' + 'polls/static/polls/raw_result.jpg', show_low_resolution_img)
+        cv2.imwrite('./' + 'polls/static/polls/raw_input.jpg', show_low_resolution_img)
         cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_high_resolution_img)
 
     return render(request, 'SuperResolution.html')
@@ -202,7 +202,7 @@ def DeCloud(request):
         show_de_cloud_img = cv2.resize(de_cloud_img, (512, 512))
 
         # 修改名称
-        cv2.imwrite('./' + 'polls/static/polls/raw_result.jpg', show_cloud_img)
+        cv2.imwrite('./' + 'polls/static/polls/raw_input.jpg', show_cloud_img)
         cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
 
     return render(request, 'Decloud.html')
@@ -210,6 +210,7 @@ def DeCloud(request):
 
 def Cloud_Identification(request):
     global cloud_classification, cloud_segmentation_rate
+    global task_name, running_time, model_name
     if request.method == 'POST':
         new_img = UploadIMG(
             img=request.FILES.get('img')
@@ -236,6 +237,29 @@ def Cloud_Identification(request):
         cloud_segmentation = (cloud_segmentation[0][0][0]).astype(np.uint8)
 
         cloud_segmentation_rate = cloud_segmentation.sum() / cloud_segmentation.size * 100
+
+        # 薄云图像增强
+        if cloud_classification == '是':
+            if cloud_segmentation_rate < 5:
+                model_name = 'MSBDN_RDFF'
+                task_name = '去云'
+                # 图像去云
+                cloud_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+                cloud_img = cv2.resize(cloud_img, (256, 256))
+                show_cloud_img = cv2.resize(cloud_img, (512, 512))
+
+                cloud_img = cv2.cvtColor(cloud_img, cv2.COLOR_BGR2RGB)
+                cloud_img = np.expand_dims(((cloud_img - 127.5) / 127.5).transpose(2, 0, 1), 0).astype(np.float32)
+
+                onnx_input = {de_cloud_model.get_inputs()[0].name: cloud_img}
+                record_time_begin = time.time()
+                de_cloud_img = de_cloud_model.run(None, onnx_input)
+                record_time_end = time.time()
+                running_time = record_time_end - record_time_begin
+                de_cloud_img = np.uint8(np.clip(de_cloud_img[0].squeeze(0).transpose(1, 2, 0), -1, 1) * 127.5 + 127.5)
+                de_cloud_img = cv2.cvtColor(de_cloud_img, cv2.COLOR_RGB2BGR)
+                show_de_cloud_img = cv2.resize(de_cloud_img, (512, 512))
+                cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
 
         # 修改名称
 
