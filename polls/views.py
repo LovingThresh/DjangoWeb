@@ -168,6 +168,7 @@ def SuperResolution(request):
         # 修改名称
         cv2.imwrite('./' + 'polls/static/polls/raw_input.jpg', show_low_resolution_img)
         cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_high_resolution_img)
+        showResult(request)
 
     return render(request, 'SuperResolution.html')
 
@@ -205,6 +206,8 @@ def DeCloud(request):
         cv2.imwrite('./' + 'polls/static/polls/raw_input.jpg', show_cloud_img)
         cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
 
+        showResult(request)
+
     return render(request, 'Decloud.html')
 
 
@@ -226,10 +229,6 @@ def Cloud_Identification(request):
         cloud_classification = thin_cloud_classification_ConvNext.run(None, onnx_input)
         cloud_classification = np.array(cloud_classification).reshape(2, )
         cloud_classification = np.exp(cloud_classification[0]) / np.exp(cloud_classification).sum()
-        if cloud_classification >= 0.5:
-            cloud_classification = '是'
-        else:
-            cloud_classification = '否'
 
         # 图像云层分割
         onnx_input = {cloud_segmentation_Unet.get_inputs()[0].name: img_segmentation_numpy}
@@ -238,8 +237,16 @@ def Cloud_Identification(request):
 
         cloud_segmentation_rate = cloud_segmentation.sum() / cloud_segmentation.size * 100
 
+        if cloud_classification >= 0.5:
+            if cloud_segmentation_rate < 5:
+                cloud_classification = '是(薄云)'
+            else:
+                cloud_classification = '是(厚云)'
+        else:
+            cloud_classification = '否'
+
         # 薄云图像增强
-        if cloud_classification == '是':
+        if cloud_classification == '是(薄云)':
             if cloud_segmentation_rate < 5:
                 model_name = 'MSBDN_RDFF'
                 task_name = '去云'
@@ -260,6 +267,7 @@ def Cloud_Identification(request):
                 de_cloud_img = cv2.cvtColor(de_cloud_img, cv2.COLOR_RGB2BGR)
                 show_de_cloud_img = cv2.resize(de_cloud_img, (512, 512))
                 cv2.imwrite('./' + 'polls/static/polls/generated_result.jpg', show_de_cloud_img)
+                showResult(request)
 
         # 修改名称
 

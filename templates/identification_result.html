@@ -25,14 +25,12 @@
             <h4 style="padding-top: 4px">该图像是否存在云层遮挡： {{ cloud_classification_result }} </h4>
             <h4 style="padding-top: 4px">该图像的云层遮挡率： {{ cloud_segmentation_result }} % </h4>
             <div class="col">
-
             <h4>是否直接对薄云进行去云处理:
-            <button class="btn btn-primary" type="button">否</button>
-            <a href={% url "polls:result" %}>
-            <button class="btn btn-primary" type="button">是</button>
-            </a>
+                <button class="btn btn-primary" type="button">否</button>
+                <a href={% url "polls:result" %}>
+                <button class="btn btn-primary" type="button">是</button>
+                </a>
             </h4>
-
             </div>
         </div>
     </div>

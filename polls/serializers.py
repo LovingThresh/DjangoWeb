@@ -23,6 +23,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ImageSerializer(serializers.Serializer):
     # 定义一个图像字段
     image = serializers.ImageField()
+#     image_base = serializers.JSONBoundField()
 
     # 定义一个结果字段
     result = serializers.CharField()
