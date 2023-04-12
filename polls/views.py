@@ -1,12 +1,10 @@
 import time
 
-import numpy as np
 import onnxruntime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import UploadIMG
 import django.contrib.auth as auth
-from django.contrib.auth import login as auth_login
 
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -186,6 +184,7 @@ def DeCloud(request):
         model_name = 'MSBDN_RDFF'
         task_name = '去云'
         # 图像去云
+
         cloud_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
         cloud_img = cv2.resize(cloud_img, (256, 256))
         show_cloud_img = cv2.resize(cloud_img, (512, 512))
@@ -309,6 +308,7 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('name')
         password = request.POST.get('password')
+        # return render(request, 'index.html')
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)

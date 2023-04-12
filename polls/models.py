@@ -26,3 +26,8 @@ class Choice(models.Model):
 
 class UploadIMG(models.Model):
     img = models.ImageField(upload_to='polls/static/polls')
+
+
+class ImageAPIModel(models.Model):
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='./polls/static/polls/images/')

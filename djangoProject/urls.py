@@ -20,16 +20,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from rest_framework import routers
-from polls import views
+
+import polls.views
+from polls import views, API
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-
-
-def home_view(request):
-    var = {'hello': 'Liuye'}
-    return render(request, 'runoob.html', context=var)
+router.register(r'image', API.ImageViewSet)
 
 
 def simple_view(request):
@@ -37,7 +35,7 @@ def simple_view(request):
 
 
 urlpatterns = [
-                  path("", home_view, name='home'),
+                  path("", polls.views.login, name='login'),
                   path("result/", simple_view, name='result'),
                   path("admin/", admin.site.urls),
                   path('polls/', include('polls.urls')),
